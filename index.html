@@ -3,49 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be My Valentine ❤️</title>
 
-<title>Open This 💌</title>
-
-<!-- WhatsApp Preview -->
-<meta property="og:title" content="A Special Surprise 💖">
-<meta property="og:description" content="Tap to open your surprise 🎁">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://dheeraj124-cyber.github.io/sounds/">
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <style>
 body {
     margin: 0;
-    height: 100vh;
+    min-height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(40,0,0,0.5)),
+                url("https://images.unsplash.com/photo-1445233566136-a2a4e2c38bc2?q=80&w=687&auto=format&fit=crop");
+    background-size: cover;
+    background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg,#ff4e50,#fc913a);
-    font-family: Arial, sans-serif;
+    font-family: sans-serif;
 }
 
 .card {
-    background: white;
-    padding: 25px;
-    border-radius: 20px;
-    text-align: center;
+    background: rgba(255,255,255,0.95);
+    padding: 25px 20px;
     width: 90%;
     max-width: 350px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(255,50,100,0.3);
 }
 
-h1 { color: #e63946; }
+h1 { color: #e63946; margin: 10px 0; }
+p { color: #555; }
+
+img {
+    max-width: 80%;
+    max-height: 200px;
+    border-radius: 12px;
+    margin: 10px 0;
+}
 
 .buttons {
     margin-top: 20px;
     display: flex;
     justify-content: space-around;
+    gap: 10px;
 }
 
 button {
     padding: 10px 18px;
     border: none;
     border-radius: 30px;
-    font-size: 15px;
+    font-size: 14px;
     cursor: pointer;
     transition: 0.3s;
 }
@@ -59,81 +66,119 @@ button {
     background: #ddd;
 }
 
-/* Shake animation */
+.message {
+    display: none;
+    margin-top: 15px;
+    color: #e63946;
+    font-weight: bold;
+}
+
+/* Shake Animation */
 @keyframes shake {
     0% { transform: translateX(0); }
-    20% { transform: translateX(-8px); }
-    40% { transform: translateX(8px); }
-    60% { transform: translateX(-8px); }
-    80% { transform: translateX(8px); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-10px); }
+    80% { transform: translateX(10px); }
     100% { transform: translateX(0); }
 }
 
 .shake {
-    animation: shake 0.5s;
+    animation: shake 0.6s;
 }
 </style>
 </head>
 
 <body>
 
-<!-- Background Music -->
+<!-- Background Music (Make sure music.mp3 is in same folder) -->
 <audio id="bgMusic" loop preload="auto">
-    <source src="music.mp3" type="audio/mp3">
+  <source src="music.mp3" type="audio/mp3">
 </audio>
 
-<div class="card" onclick="startMusic()">
+<div class="card">
     <h1>Dear VEDA 💖</h1>
+
+    <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmpib2V2cmxlb2wyZ2lucGJlOTRmaXNmcjd0cTA5M2QxZmsyanUwOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/F6LkzS5hhek3fDKgwb/giphy.gif">
+
     <h1>Will you be my Valentine? 💕</h1>
+    <p>Choose wisely 😌</p>
 
     <div class="buttons">
-        <button class="yes" onclick="yesClicked(event)">YES ❤️</button>
+        <button class="yes" onclick="yesClicked()">YES ❤️</button>
         <button id="noBtn" class="no">NO 🙈</button>
     </div>
 
-    <p id="msg"></p>
+    <div id="loveMessage" class="message"></div>
 </div>
 
 <script>
+
+/* EmailJS Init */
+(function(){
+    emailjs.init("ROmKtuv3dv8eS25Fr");
+})();
+
+/* Auto Play Music on First Tap */
 const music = document.getElementById("bgMusic");
-let musicStarted = false;
 
-/* Auto play attempt for laptop */
-window.addEventListener("load", () => {
-    music.play().catch(()=>{});
-});
-
-/* Start music on first click/tap (for mobile) */
 function startMusic() {
-    if (!musicStarted) {
-        music.play().catch(()=>{});
-        musicStarted = true;
-    }
+    music.play().catch(()=>{});
+    document.removeEventListener("click", startMusic);
+    document.removeEventListener("touchstart", startMusic);
 }
 
-/* YES button */
-function yesClicked(e){
-    e.stopPropagation();
-    document.getElementById("msg").innerHTML =
-        "💕 Yayyy! You made my heart happiest ❤️";
+document.addEventListener("click", startMusic);
+document.addEventListener("touchstart", startMusic);
+
+/* YES Button */
+function yesClicked(){
+    document.querySelector(".buttons").style.display = "none";
+    const msg = document.getElementById("loveMessage");
+    msg.style.display = "block";
+    msg.innerHTML = "💕 Yayyyy! 💕 <br>You just made my heart happiest ❤️";
+    sendEmail("YES ❤️");
 }
 
-/* NO button shake every click */
+/* NO Button */
 let count = 0;
 const noBtn = document.getElementById("noBtn");
 
-noBtn.addEventListener("click", function(e){
-    e.stopPropagation();
+noBtn.addEventListener("click", function(){
     count++;
 
+    const msg = document.getElementById("loveMessage");
+    msg.style.display = "block";
+
+    if(count === 1){
+        this.innerText = "Really 🥺";
+        msg.innerHTML = "Really? 🥺";
+    }
+    else if(count === 2){
+        this.innerText = "Think again 😭";
+        msg.innerHTML = "I’ll wait 💕";
+    }
+    else {
+        this.innerText = "Click YES ❤️";
+        msg.innerHTML = "Last chance 😌";
+    }
+
+    /* Shake Every Click */
     this.classList.remove("shake");
     void this.offsetWidth;
     this.classList.add("shake");
 
-    if(count == 1) this.innerText = "Really? 🥺";
-    else if(count == 2) this.innerText = "Think again 😭";
-    else this.innerText = "Click YES ❤️";
+    sendEmail("NO 🙈 (" + count + ")");
 });
+
+/* Send Email */
+function sendEmail(decision){
+    emailjs.send("service_oii5uud", "template_eyq8ypd", {
+        decision: decision,
+        name: "VEDA"
+    });
+}
+
 </script>
 
 </body>
