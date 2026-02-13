@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Be My Valentine ❤️</title>
+
+<!-- Neutral Title (Not romantic in preview) -->
+<title>Open This 💌</title>
+
+<!-- WhatsApp Preview Control -->
+<meta property="og:title" content="A Special Surprise 💖">
+<meta property="og:description" content="Tap to open your surprise 🎁">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dheeraj124-cyber.github.io/sounds/">
+<meta property="og:image" content="https://images.unsplash.com/photo-1516589091380-5d8e87df6999?auto=format&fit=crop&w=800&q=80">
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
@@ -91,9 +100,9 @@ button {
 
 <body>
 
-<!-- Background Music (Make sure music.mp3 is in same folder) -->
-<audio id="bgMusic" loop preload="auto">
-  <source src="music.mp3" type="audio/mp3">
+<!-- Background Music -->
+<audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mp3">
 </audio>
 
 <div class="card">
@@ -119,17 +128,17 @@ button {
     emailjs.init("ROmKtuv3dv8eS25Fr");
 })();
 
-/* Auto Play Music on First Tap */
+/* Music starts on FIRST touch anywhere (mobile safe) */
 const music = document.getElementById("bgMusic");
 
-function startMusic() {
-    music.play().catch(()=>{});
-    document.removeEventListener("click", startMusic);
-    document.removeEventListener("touchstart", startMusic);
+function startMusicOnce() {
+    music.play().catch(() => {});
+    document.removeEventListener("touchstart", startMusicOnce);
+    document.removeEventListener("click", startMusicOnce);
 }
 
-document.addEventListener("click", startMusic);
-document.addEventListener("touchstart", startMusic);
+document.addEventListener("touchstart", startMusicOnce);
+document.addEventListener("click", startMusicOnce);
 
 /* YES Button */
 function yesClicked(){
@@ -163,7 +172,7 @@ noBtn.addEventListener("click", function(){
         msg.innerHTML = "Last chance 😌";
     }
 
-    /* Shake Every Click */
+    /* Shake every click */
     this.classList.remove("shake");
     void this.offsetWidth;
     this.classList.add("shake");
@@ -171,7 +180,7 @@ noBtn.addEventListener("click", function(){
     sendEmail("NO 🙈 (" + count + ")");
 });
 
-/* Send Email */
+/* Email Sender */
 function sendEmail(decision){
     emailjs.send("service_oii5uud", "template_eyq8ypd", {
         decision: decision,
